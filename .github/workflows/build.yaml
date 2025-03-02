@@ -18,6 +18,9 @@ jobs:
           java-version: "21"
           distribution: "temurin"
           cache: maven
+      - uses: extractions/setup-just@v2
+      - name: Build example tools
+        run: just installGetWeather installCodeExchangeRate
       - name: Build with Maven
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
