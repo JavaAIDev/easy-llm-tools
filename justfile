@@ -1,7 +1,7 @@
 #!/usr/bin/env just --justfile
 
 build:
-  mvn -B -pl '!:examples,!:example-spring-ai,!:get-weather' -DskipTests package
+  mvn -B -ntp -pl '!:examples,!:example-spring-ai,!:get-weather' -DskipTests package
 
 generateCodeGetWeather: build
   java -jar code-generator/cli/target/code-generator-cli.jar simple \
@@ -10,7 +10,7 @@ generateCodeGetWeather: build
     examples/get-weather.json
 
 installGetWeather:
-  mvn -B -f examples/tool-get-weather-fake/pom.xml install
+  mvn -B -ntp -f examples/tool-get-weather-fake/pom.xml install
 
 generateCodeExchangeRate: build
   java -jar code-generator/cli/target/code-generator-cli.jar openapi \
@@ -19,4 +19,4 @@ generateCodeExchangeRate: build
       examples/exchangerate-openapi.json
 
 installCodeExchangeRate: generateCodeExchangeRate
-  mvn -B -f target/exchange-rate/pom.xml install
+  mvn -B -ntp -f target/exchange-rate/pom.xml install

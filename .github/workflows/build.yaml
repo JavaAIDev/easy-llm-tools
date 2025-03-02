@@ -20,12 +20,12 @@ jobs:
           cache: maven
       - uses: extractions/setup-just@v2
       - name: Install parent
-        run: mvn -B install -N
+        run: mvn -B -ntp install -N
       - name: Install tool spec
-        run: mvn -B -f agent-tool-spec/pom.xml install
+        run: mvn -B -ntp -f agent-tool-spec/pom.xml install
       - name: Build example tools
         run: just installGetWeather installCodeExchangeRate
       - name: Build with Maven
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: mvn --batch-mode package
+        run: mvn --batch-mode -ntp package
