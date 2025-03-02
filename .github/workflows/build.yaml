@@ -20,9 +20,9 @@ jobs:
           cache: maven
       - uses: extractions/setup-just@v2
       - name: Install parent
-        run: mvn install -N
+        run: mvn -B install -N
       - name: Install tool spec
-        run: mvn -f agent-tool-spec/pom.xml install
+        run: mvn -B -f agent-tool-spec/pom.xml install
       - name: Build example tools
         run: just installGetWeather installCodeExchangeRate
       - name: Build with Maven
