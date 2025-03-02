@@ -1,0 +1,45 @@
+package {{packageName}};
+
+import {{specPackageName}}.Tool;
+import {{generatedSpecPackageName}}.{{configurationClassName}};
+import {{generatedSpecPackageName}}.{{parametersClassName}};
+import {{generatedSpecPackageName}}.{{returnTypeClassName}};
+
+public abstract class Abstract{{toolClassName}} implements Tool<{{parametersClassName}}, {{returnTypeClassName}}, {{configurationClassName}}> {
+
+    protected {{configurationClassName}} config;
+
+    protected Abstract{{toolClassName}}(final {{configurationClassName}} config) {
+        this.config = config;
+    }
+
+    @Override
+    public String getId() {
+        return "{{#escapeJava definition.id}}{{/escapeJava}}";
+    }
+
+    @Override
+    public String getName() {
+        return "{{#escapeJava definition.name}}{{/escapeJava}}";
+    }
+
+    @Override
+    public String getDescription() {
+        return "{{#escapeJava definition.description}}{{/escapeJava}}";
+    }
+
+    @Override
+    public String getParametersSchema() {
+        return "{{#escapeJava definition.parametersSchema}}{{/escapeJava}}";
+    }
+
+    @Override
+    public String getReturnTypeSchema() {
+        return "{{#escapeJava definition.returnTypeSchema}}{{/escapeJava}}";
+    }
+
+    @Override
+    public String getExamples() {
+        return "{{#escapeJava definition.examples}}{{/escapeJava}}";
+    }
+}

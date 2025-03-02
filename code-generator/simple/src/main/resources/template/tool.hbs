@@ -1,0 +1,23 @@
+package {{packageName}};
+
+import java.lang.reflect.Type;
+import {{generatedSpecPackageName}}.{{configurationClassName}};
+import {{generatedSpecPackageName}}.{{parametersClassName}};
+import {{generatedSpecPackageName}}.{{returnTypeClassName}};
+
+public class {{toolClassName}} extends Abstract{{toolClassName}} {
+
+    public {{toolClassName}}(final {{configurationClassName}} config) {
+        super(config);
+    }
+
+    @Override
+    public Type getRequestType() {
+        return {{parametersClassName}}.class;
+    }
+
+    @Override
+    public {{returnTypeClassName}} call(final {{parametersClassName}} parameters) {
+        return new {{returnTypeClassName}}();
+    }
+}

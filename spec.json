@@ -1,0 +1,61 @@
+{
+  "$schema" : "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://javaaidev.com/llm-tool.schema.json",
+  "type": "object",
+  "title": "LLM Tool Spec",
+  "description": "Tools for LLMs to use",
+  "properties": {
+    "definition": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique id of this tool"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of this tool"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of this tool"
+        },
+        "parameters": {
+          "description": "Parameters of this tool",
+          "$ref": "https://json-schema.org/draft/2020-12/schema"
+        },
+        "returnType": {
+          "description": "Return type of this tool",
+          "$ref": "https://json-schema.org/draft/2020-12/schema"
+        },
+        "examples": {
+          "description": "Examples of using tool",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "description": {
+                "description": "Description of this example",
+                "type": "string"
+              },
+              "parameters": {
+                "description": "Input parameters",
+                "type": "object"
+              },
+              "returnValue": {
+                "description": "Return value",
+                "type": "object"
+              }
+            }
+          }
+        }
+      },
+      "required": ["name", "description"]
+    },
+    "configuration": {
+      "description": "Configuration of this tool",
+      "$ref": "https://json-schema.org/draft/2020-12/schema"
+    },
+    "required": ["definition"]
+  }
+}

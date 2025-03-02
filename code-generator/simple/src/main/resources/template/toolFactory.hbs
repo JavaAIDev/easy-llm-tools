@@ -1,0 +1,12 @@
+package {{packageName}};
+
+import {{specPackageName}}.ToolFactory;
+import {{generatedSpecPackageName}}.{{configurationClassName}};
+
+public class {{toolClassName}}Factory implements ToolFactory<{{toolClassName}}, {{configurationClassName}}> {
+
+    @Override
+    public {{toolClassName}} create(final {{configurationClassName}} config) {
+        return new {{toolClassName}}(config);
+    }
+}

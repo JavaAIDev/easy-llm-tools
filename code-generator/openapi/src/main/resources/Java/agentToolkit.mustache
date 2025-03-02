@@ -1,0 +1,156 @@
+{{>licenseInfo}}
+
+package {{package}};
+
+{{#imports}}
+import {{import}};
+{{/imports}}
+
+import {{package}}.{{classname}};
+
+import java.lang.reflect.Type;
+
+import java.io.InputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.http.HttpRequest;
+import java.nio.channels.Channels;
+import java.nio.channels.Pipe;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import java.util.ArrayList;
+import java.util.StringJoiner;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Consumer;
+
+import {{invokerPackage}}.ApiException;
+import {{invokerPackage}}.ApiClient;
+
+import com.javaaidev.easyllmtools.agenttoolspec.Tool;
+import com.javaaidev.easyllmtools.agenttoolspec.Toolkit;
+import com.javaaidev.easyllmtools.agenttoolspec.ToolFactory;
+
+{{>generatedAnnotation}}
+{{#operations}}
+public class {{classname}}AgentToolkit implements Toolkit {
+
+  @Override
+  public String getName() {
+    return "{{appName}}";
+  }
+
+  @Override
+  public String getDescription() {
+    return "{{appDescription}}";
+  }
+
+  private static final Pattern pattern = Pattern.compile("\\$\\{(.*?)\\}");
+
+  private static String replacePlaceholders(String template) {
+    Matcher matcher = pattern.matcher(template);
+    StringBuilder result = new StringBuilder();
+    while (matcher.find()) {
+      String placeholder = matcher.group(1);
+      String value = System.getenv(placeholder);
+      String replacement = value != null ? value : "";
+      matcher.appendReplacement(result, replacement);
+    }
+    matcher.appendTail(result);
+    return result.toString();
+  }
+
+  {{#operation}}
+
+  {{#allParams}}
+  {{#-first}}
+  public record Request_{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) {}
+  {{/-first}}
+  {{/allParams}}
+  {{^allParams}}
+  public class Request_{{operationId}} {}
+  {{/allParams}}
+
+  {{#returnType}}
+  public record Response_{{operationId}}({{{returnType}}} value) {}
+  {{/returnType}}
+  {{^returnType}}
+  public class Response_{{operationId}} {}
+  {{/returnType}}
+
+  public static class AgentTool_{{operationId}} implements Tool<Request_{{operationId}}, Response_{{operationId}}, {{classname}}ToolConfiguration> {
+    private final {{classname}} apiInvoker;
+
+    public AgentTool_{{operationId}}({{classname}}ToolConfiguration config) {
+      ApiClient apiClient = new ApiClient();
+      if (config.getBaseUri() != null) {
+        apiClient.updateBaseUri(config.getBaseUri());
+      }
+      var headers = config.getHeaders();
+      if (headers != null && !headers.isEmpty()) {
+        apiClient.setRequestInterceptor((builder) -> {
+          headers.forEach((k, v) -> {
+            builder.header(k, replacePlaceholders(v));
+          });
+        });
+      }
+      this.apiInvoker = new {{classname}}(apiClient);
+    }
+
+    @Override
+    public String getId() {
+      return "{{operationId}}";
+    }
+
+    @Override
+    public String getName() {
+      return "{{operationId}}";
+    }
+
+    @Override
+    public String getDescription() {
+      return "{{summary}}";
+    }
+
+    @Override
+    public Type getRequestType() {
+      return Request_{{operationId}}.class;
+    }
+
+    @Override
+    public Response_{{operationId}} call(Request_{{operationId}} request) {
+      try {
+        {{#returnType}}
+        return new Response_{{operationId}}(apiInvoker.{{operationId}}({{#allParams}}request.{{paramName}}(){{^-last}}, {{/-last}}{{/allParams}}));
+        {{/returnType}}
+        {{^returnType}}
+        apiInvoker.{{operationId}}({{#allParams}}request.{{paramName}}(){{^-last}}, {{/-last}}{{/allParams}});
+        return new Response_{{operationId}}();
+        {{/returnType}}
+      } catch (ApiException e) {
+        throw new RuntimeException(e);
+      }
+    }
+  }
+
+  public static class AgentToolFactory_{{operationId}} implements ToolFactory<AgentTool_{{operationId}}, {{classname}}ToolConfiguration> {
+    @Override
+    public AgentTool_{{operationId}} create({{classname}}ToolConfiguration config) {
+      return new AgentTool_{{operationId}}(config);
+    }
+  }
+
+  {{/operation}}
+}
+{{/operations}}

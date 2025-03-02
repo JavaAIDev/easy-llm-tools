@@ -1,0 +1,56 @@
+{
+  "definition": {
+    "name": "Get weather",
+    "description": "Get weather by location",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "location": {
+          "type": "string",
+          "description": "Location"
+        }
+      }
+    },
+    "returnType": {
+      "type": "object",
+      "properties": {
+        "condition": {
+          "type": "string",
+          "description": "Weather condition"
+        },
+        "temperature": {
+          "type": "number",
+          "description": "Temperature"
+        },
+        "temperatureUnit": {
+          "type": "string",
+          "description": "Unit of temperature",
+          "enum": ["C", "F"]
+        }
+      }
+    },
+    "examples": [
+      {
+        "description": "Get weather of New York",
+        "parameters": {
+          "location": "New York"
+        },
+        "returnValue": {
+          "condition": "Sunny",
+          "temperature": 28,
+          "temperatureUnit": "C"
+        }
+      }
+    ]
+  },
+  "configuration": {
+    "type": "object",
+    "properties": {
+      "temperatureUnit": {
+        "type": "string",
+        "description": "Unit of temperature",
+        "enum": ["C", "F"]
+      }
+    }
+  }
+}

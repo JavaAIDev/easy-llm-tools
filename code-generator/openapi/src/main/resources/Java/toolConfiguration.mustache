@@ -1,0 +1,33 @@
+{{>licenseInfo}}
+
+package {{package}};
+
+{{#imports}}
+    import {{import}};
+{{/imports}}
+
+import {{package}}.{{classname}};
+
+import java.util.Map;
+import java.util.HashMap;
+
+public class {{classname}}ToolConfiguration {
+  private String baseUri;
+  private Map<String, String> headers = new HashMap<>();
+
+  public void setBaseUri(String baseUri) {
+    this.baseUri = baseUri;
+  }
+
+  public String getBaseUri() {
+    return this.baseUri;
+  }
+
+  public void setHeaders(Map<String, String> headers) {
+    this.headers = headers;
+  }
+
+  public Map<String, String> getHeaders() {
+    return this.headers;
+  }
+}
