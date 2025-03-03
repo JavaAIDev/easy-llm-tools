@@ -18,6 +18,19 @@ class OpenAPIAgentToolGenerator : JavaClientCodegen(), CodegenConfig {
         )
     }
 
+
+    override fun processOpts() {
+        super.processOpts()
+        val invokerFolder = ("$sourceFolder/$invokerPackage").replace(".", "/")
+        supportingFiles.add(
+            SupportingFile(
+                "jsonSchemaUtils.mustache",
+                invokerFolder,
+                "JsonSchemaUtils.java"
+            )
+        )
+    }
+
     override fun getName(): String {
         return "Java"
     }

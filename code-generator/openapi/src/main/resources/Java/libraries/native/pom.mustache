@@ -287,6 +287,21 @@
       <artifactId>agent-tool-spec</artifactId>
       <version>0.1.0</version>
     </dependency>
+    <dependency>
+      <groupId>com.github.victools</groupId>
+      <artifactId>jsonschema-generator</artifactId>
+      <version>${jsonschema.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.victools</groupId>
+      <artifactId>jsonschema-module-jackson</artifactId>
+      <version>${jsonschema.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.victools</groupId>
+      <artifactId>jsonschema-module-swagger-2</artifactId>
+      <version>${jsonschema.version}</version>
+    </dependency>
 
     <!-- test dependencies -->
     <dependency>
@@ -325,5 +340,6 @@
     {{/useReflectionEqualsHashCode}}
     <junit-version>5.10.2</junit-version>
     <spotless.version>2.27.2</spotless.version>
+    <jsonschema.version>4.37.0</jsonschema.version>
   </properties>
 </project>

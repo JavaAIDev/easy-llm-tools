@@ -37,6 +37,7 @@ import java.util.function.Consumer;
 
 import {{invokerPackage}}.ApiException;
 import {{invokerPackage}}.ApiClient;
+import {{invokerPackage}}.JsonSchemaUtils;
 
 import com.javaaidev.easyllmtools.agenttoolspec.Tool;
 import com.javaaidev.easyllmtools.agenttoolspec.Toolkit;
@@ -91,6 +92,7 @@ public class {{classname}}AgentToolkit implements Toolkit {
 
   public static class AgentTool_{{operationId}} implements Tool<Request_{{operationId}}, Response_{{operationId}}, {{classname}}ToolConfiguration> {
     private final {{classname}} apiInvoker;
+    private final String parametersSchema;
 
     public AgentTool_{{operationId}}({{classname}}ToolConfiguration config) {
       ApiClient apiClient = new ApiClient();
@@ -106,6 +108,7 @@ public class {{classname}}AgentToolkit implements Toolkit {
         });
       }
       this.apiInvoker = new {{classname}}(apiClient);
+      this.parametersSchema = JsonSchemaUtils.getJsonSchema(Request_{{operationId}}.class);
     }
 
     @Override
@@ -126,6 +129,11 @@ public class {{classname}}AgentToolkit implements Toolkit {
     @Override
     public Type getRequestType() {
       return Request_{{operationId}}.class;
+    }
+
+    @Override
+    public String getParametersSchema() {
+      return this.parametersSchema;
     }
 
     @Override
