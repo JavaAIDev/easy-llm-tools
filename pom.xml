@@ -13,7 +13,6 @@
     <module>agent-tool-spec</module>
     <module>integration</module>
     <module>code-generator</module>
-    <module>examples</module>
   </modules>
 
   <properties>
