@@ -1,7 +1,13 @@
 package com.javaaidev.easyllmtools.integration.springai;
 
+import static com.fasterxml.jackson.module.kotlin.ExtensionsKt.jacksonMapperBuilder;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.javaaidev.easyllmtools.agenttoolspec.Tool;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,8 +24,16 @@ public class ToolsFunctionCallbackResolver implements ApplicationContextAware,
 
   private final FunctionCallbackResolver fallbackResolver;
   private final Map<String, Tool> toolsMap = new HashMap<>();
-  private final ObjectMapper objectMapper = new ObjectMapper().disable(
-      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+  private final ObjectMapper objectMapper = jacksonMapperBuilder()
+      .addModule(new Jdk8Module())
+      .addModule(new JavaTimeModule())
+      .serializationInclusion(JsonInclude.Include.NON_ABSENT)
+      .disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE)
+      .disable(SerializationFeature.FLUSH_AFTER_WRITE_VALUE)
+      .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+      .disable(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS)
+      .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+      .build();
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ToolsFunctionCallbackResolver.class);
 

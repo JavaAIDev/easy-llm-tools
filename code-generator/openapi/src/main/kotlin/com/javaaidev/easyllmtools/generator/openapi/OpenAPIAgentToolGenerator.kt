@@ -6,7 +6,7 @@ import org.openapitools.codegen.languages.JavaClientCodegen
 
 class OpenAPIAgentToolGenerator : JavaClientCodegen(), CodegenConfig {
     init {
-        library = "native"
+        library = "okhttp-gson"
         apiTemplateFiles["agentToolkit.mustache"] = "AgentToolkit.java"
         apiTemplateFiles["toolConfiguration.mustache"] = "ToolConfiguration.java"
         supportingFiles.add(
@@ -14,19 +14,6 @@ class OpenAPIAgentToolGenerator : JavaClientCodegen(), CodegenConfig {
                 "serviceFactories.mustache",
                 "src/main/resources/META-INF/services",
                 "com.javaaidev.easyllmtools.agenttoolspec.ToolFactory"
-            )
-        )
-    }
-
-
-    override fun processOpts() {
-        super.processOpts()
-        val invokerFolder = ("$sourceFolder/$invokerPackage").replace(".", "/")
-        supportingFiles.add(
-            SupportingFile(
-                "jsonSchemaUtils.mustache",
-                invokerFolder,
-                "JsonSchemaUtils.java"
             )
         )
     }

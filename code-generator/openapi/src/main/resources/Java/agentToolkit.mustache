@@ -35,9 +35,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import {{invokerPackage}}.Configuration;
 import {{invokerPackage}}.ApiException;
 import {{invokerPackage}}.ApiClient;
-import {{invokerPackage}}.JsonSchemaUtils;
 
 import com.javaaidev.easyllmtools.agenttoolspec.Tool;
 import com.javaaidev.easyllmtools.agenttoolspec.Toolkit;
@@ -80,35 +80,26 @@ public class {{classname}}AgentToolkit implements Toolkit {
   {{/-first}}
   {{/allParams}}
   {{^allParams}}
-  public class Request_{{operationId}} {}
+  public static class Request_{{operationId}} {}
   {{/allParams}}
 
   {{#returnType}}
-  public record Response_{{operationId}}({{{returnType}}} value) {}
+  public static record Response_{{operationId}}({{{returnType}}} value) {}
   {{/returnType}}
   {{^returnType}}
-  public class Response_{{operationId}} {}
+  public static class Response_{{operationId}} {}
   {{/returnType}}
 
   public static class AgentTool_{{operationId}} implements Tool<Request_{{operationId}}, Response_{{operationId}}, {{classname}}ToolConfiguration> {
     private final {{classname}} apiInvoker;
-    private final String parametersSchema;
 
     public AgentTool_{{operationId}}({{classname}}ToolConfiguration config) {
-      ApiClient apiClient = new ApiClient();
-      if (config.getBaseUri() != null) {
-        apiClient.updateBaseUri(config.getBaseUri());
-      }
-      var headers = config.getHeaders();
-      if (headers != null && !headers.isEmpty()) {
-        apiClient.setRequestInterceptor((builder) -> {
-          headers.forEach((k, v) -> {
-            builder.header(k, replacePlaceholders(v));
-          });
-        });
+      ApiClient apiClient = Configuration.getDefaultApiClient();
+      apiClient.setBasePath("{{{basePath}}}");
+      if (config.getBaseUri() != null && !config.getBaseUri().isEmpty()) {
+        apiClient.setBasePath(config.getBaseUri());
       }
       this.apiInvoker = new {{classname}}(apiClient);
-      this.parametersSchema = JsonSchemaUtils.getJsonSchema(Request_{{operationId}}.class);
     }
 
     @Override
@@ -133,7 +124,22 @@ public class {{classname}}AgentToolkit implements Toolkit {
 
     @Override
     public String getParametersSchema() {
-      return this.parametersSchema;
+      return """
+        {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+{{#allParams}}
+          "{{paramName}}": {
+            "description": "{{description}}",
+            "type": "{{#lambda.lowercase}}{{dataType}}{{/lambda.lowercase}}"
+            {{#allowableValues}}, "enum": [{{#values}}"{{{.}}}"{{^-last}}, {{/-last}}{{/values}}]{{/allowableValues}}
+          }
+{{^-last}}, {{/-last}}
+{{/allParams}}
+          }
+        }
+      """;
     }
 
     @Override

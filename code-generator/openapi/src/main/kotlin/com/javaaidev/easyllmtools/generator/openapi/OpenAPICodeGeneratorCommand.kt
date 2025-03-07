@@ -40,6 +40,8 @@ class OpenAPICodeGeneratorCommand : Callable<Int> {
             .setApiPackage("$packageName.api")
             .setGeneratorName("Java")
             .addAdditionalProperty("useEnumCaseInsensitive", true)
+            .addAdditionalProperty("failOnUnknownProperties", false)
+            .addAdditionalProperty("serializationLibrary", "jackson")
             .setValidateSpec(validateSpec)
             .setInputSpec(fileToString(options.inputSpec))
             .setOutputDir(fileToString(options.outputDir))
