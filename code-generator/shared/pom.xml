@@ -11,6 +11,7 @@
 
   <artifactId>code-generator-shared</artifactId>
   <name>Code Generator :: Shared</name>
+  <description>Code generator shared library</description>
 
   <properties>
     <maven.compiler.source>21</maven.compiler.source>

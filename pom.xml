@@ -7,6 +7,7 @@
   <groupId>com.javaaidev.easyllmtools</groupId>
   <artifactId>easyllmtools-parent</artifactId>
   <name>Easy LLM Tools</name>
+  <description>Build tools for LLM</description>
   <version>0.1.0</version>
   <packaging>pom</packaging>
   <modules>
