@@ -15,8 +15,8 @@
   <packaging>pom</packaging>
 
   <properties>
-    <maven.compiler.source>21</maven.compiler.source>
-    <maven.compiler.target>21</maven.compiler.target>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -33,6 +33,11 @@
         <groupId>info.picocli</groupId>
         <artifactId>picocli</artifactId>
         <version>4.7.6</version>
+      </dependency>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>1.5.16</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
