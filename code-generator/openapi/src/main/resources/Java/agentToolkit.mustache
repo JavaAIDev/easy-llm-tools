@@ -95,10 +95,25 @@ public class {{classname}}AgentToolkit implements Toolkit {
 
     public AgentTool_{{operationId}}({{classname}}ToolConfiguration config) {
       ApiClient apiClient = Configuration.getDefaultApiClient();
-      apiClient.setBasePath("{{{basePath}}}");
       if (config.getBaseUri() != null && !config.getBaseUri().isEmpty()) {
         apiClient.setBasePath(config.getBaseUri());
       }
+      if (config.getApiKey() != null && !config.getApiKey().isEmpty()) {
+        apiClient.setApiKey(config.getApiKey());
+      }
+      if (config.getUsername() != null && !config.getUsername().isEmpty()) {
+        apiClient.setUsername(config.getUsername());
+      }
+      if (config.getPassword() != null && !config.getPassword().isEmpty()) {
+        apiClient.setPassword(config.getPassword());
+      }
+      var headers = config.getHeaders();
+      if (headers != null && !headers.isEmpty()) {
+        headers.forEach((k, v) -> {
+          apiClient.addDefaultHeader(k, replacePlaceholders(v));
+        });
+      }
+      apiClient.setUserAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36");
       this.apiInvoker = new {{classname}}(apiClient);
     }
 

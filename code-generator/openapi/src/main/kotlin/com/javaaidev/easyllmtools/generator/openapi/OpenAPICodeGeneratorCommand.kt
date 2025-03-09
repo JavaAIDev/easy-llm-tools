@@ -42,6 +42,7 @@ class OpenAPICodeGeneratorCommand : Callable<Int> {
             .addAdditionalProperty("useEnumCaseInsensitive", true)
             .addAdditionalProperty("failOnUnknownProperties", false)
             .addAdditionalProperty("serializationLibrary", "jackson")
+            .addAdditionalProperty("disallowAdditionalPropertiesIfNotPresent", "false")
             .setValidateSpec(validateSpec)
             .setInputSpec(fileToString(options.inputSpec))
             .setOutputDir(fileToString(options.outputDir))
