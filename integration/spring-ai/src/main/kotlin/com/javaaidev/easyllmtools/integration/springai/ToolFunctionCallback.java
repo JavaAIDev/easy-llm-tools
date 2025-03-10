@@ -31,8 +31,8 @@ public class ToolFunctionCallback implements FunctionCallback {
 
   @Override
   public String call(String functionInput) {
-    var type = objectMapper.getTypeFactory().constructType(tool.getRequestType());
     try {
+      var type = objectMapper.getTypeFactory().constructType(tool.getRequestType());
       var input = objectMapper.readValue(functionInput, type);
       var result = tool.call(input);
       return objectMapper.writeValueAsString(result);
