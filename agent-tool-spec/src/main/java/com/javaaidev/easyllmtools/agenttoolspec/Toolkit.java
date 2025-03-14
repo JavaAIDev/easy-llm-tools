@@ -1,10 +1,23 @@
 package com.javaaidev.easyllmtools.agenttoolspec;
 
+/**
+ * A toolkit of tools. A toolkit is a group of tools.
+ */
 public interface Toolkit {
 
-    String getName();
+  /**
+   * Name of this toolkit
+   *
+   * @return toolkit name
+   */
+  String getName();
 
-    default String getDescription() {
-        return this.getName();
-    }
+  /**
+   * Description of this toolkit
+   *
+   * @return toolkit description
+   */
+  default String getDescription() {
+    return this.getName();
+  }
 }

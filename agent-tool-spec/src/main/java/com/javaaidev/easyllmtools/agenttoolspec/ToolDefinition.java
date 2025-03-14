@@ -1,24 +1,57 @@
 package com.javaaidev.easyllmtools.agenttoolspec;
 
+/**
+ * Definition of a tool
+ */
 public interface ToolDefinition {
 
-    default String getId() {
-        return this.getName();
-    }
+  /**
+   * Tool id, default to tool's name
+   *
+   * @return tool id
+   */
+  default String getId() {
+    return this.getName();
+  }
 
-    String getName();
+  /**
+   * Tool name
+   *
+   * @return tool name
+   */
+  String getName();
 
-    String getDescription();
+  /**
+   * Tool description
+   *
+   * @return tool description
+   */
+  String getDescription();
 
-    default String getParametersSchema() {
-        return "{}";
-    }
+  /**
+   * JSON schema of tool's parameters
+   *
+   * @return Parameters schema
+   */
+  default String getParametersSchema() {
+    return "{}";
+  }
 
-    default String getReturnTypeSchema() {
-        return "{}";
-    }
+  /**
+   * JSON schema of tool's return type
+   *
+   * @return Return type schema
+   */
+  default String getReturnTypeSchema() {
+    return "{}";
+  }
 
-    default String getExamples() {
-        return "{}";
-    }
+  /**
+   * Examples to call this tool
+   *
+   * @return Examples
+   */
+  default String getExamples() {
+    return "{}";
+  }
 }

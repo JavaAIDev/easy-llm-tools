@@ -90,7 +90,7 @@ public class {{classname}}AgentToolkit implements Toolkit {
   public static class Response_{{operationId}} {}
   {{/returnType}}
 
-  public static class AgentTool_{{operationId}} implements Tool<Request_{{operationId}}, Response_{{operationId}}, {{classname}}ToolConfiguration> {
+  public static class AgentTool_{{operationId}} implements Tool<Request_{{operationId}}, Response_{{operationId}}> {
     private final {{classname}} apiInvoker;
 
     public AgentTool_{{operationId}}({{classname}}ToolConfiguration config) {
