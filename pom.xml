@@ -14,6 +14,7 @@
     <module>agent-tool-spec</module>
     <module>integration</module>
     <module>code-generator</module>
+    <module>support</module>
   </modules>
 
   <url>https://github.com/JavaAIDev/easy-llm-tools</url>
@@ -71,6 +72,12 @@
         <groupId>org.jetbrains.kotlin</groupId>
         <artifactId>kotlin-stdlib</artifactId>
         <version>${kotlin.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-test</artifactId>
+        <version>${kotlin.version}</version>
+        <scope>test</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
