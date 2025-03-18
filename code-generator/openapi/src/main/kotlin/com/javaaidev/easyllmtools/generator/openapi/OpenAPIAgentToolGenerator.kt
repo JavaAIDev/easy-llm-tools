@@ -7,7 +7,7 @@ import org.openapitools.codegen.languages.JavaClientCodegen
 class OpenAPIAgentToolGenerator : JavaClientCodegen(), CodegenConfig {
     init {
         library = "okhttp-gson"
-        apiTemplateFiles["agentToolkit.mustache"] = "AgentToolkit.java"
+        apiTemplateFiles["llmToolkit.mustache"] = "LLMToolkit.java"
         apiTemplateFiles["toolConfiguration.mustache"] = "ToolConfiguration.java"
         supportingFiles.add(
             SupportingFile(

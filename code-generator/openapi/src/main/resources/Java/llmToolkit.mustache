@@ -45,7 +45,7 @@ import com.javaaidev.easyllmtools.llmtoolspec.ToolFactory;
 
 {{>generatedAnnotation}}
 {{#operations}}
-public class {{classname}}AgentToolkit implements Toolkit {
+public class {{classname}}LLMToolkit implements Toolkit {
 
   @Override
   public String getName() {
@@ -90,10 +90,10 @@ public class {{classname}}AgentToolkit implements Toolkit {
   public static class Response_{{operationId}} {}
   {{/returnType}}
 
-  public static class AgentTool_{{operationId}} implements Tool<Request_{{operationId}}, Response_{{operationId}}> {
+  public static class LLMTool_{{operationId}} implements Tool<Request_{{operationId}}, Response_{{operationId}}> {
     private final {{classname}} apiInvoker;
 
-    public AgentTool_{{operationId}}({{classname}}ToolConfiguration config) {
+    public LLMTool_{{operationId}}({{classname}}ToolConfiguration config) {
       ApiClient apiClient = Configuration.getDefaultApiClient();
       if (config.getBaseUri() != null && !config.getBaseUri().isEmpty()) {
         apiClient.setBasePath(config.getBaseUri());
@@ -173,10 +173,10 @@ public class {{classname}}AgentToolkit implements Toolkit {
     }
   }
 
-  public static class AgentToolFactory_{{operationId}} implements ToolFactory<AgentTool_{{operationId}}, {{classname}}ToolConfiguration> {
+  public static class LLMToolFactory_{{operationId}} implements ToolFactory<LLMTool_{{operationId}}, {{classname}}ToolConfiguration> {
     @Override
-    public AgentTool_{{operationId}} create({{classname}}ToolConfiguration config) {
-      return new AgentTool_{{operationId}}(config);
+    public LLMTool_{{operationId}} create({{classname}}ToolConfiguration config) {
+      return new LLMTool_{{operationId}}(config);
     }
   }
 
