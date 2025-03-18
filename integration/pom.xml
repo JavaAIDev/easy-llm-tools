@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.javaaidev.easyllmtools</groupId>
     <artifactId>easyllmtools-parent</artifactId>
-    <version>0.1.3</version>
+    <version>0.1.4</version>
   </parent>
 
   <artifactId>integration</artifactId>
