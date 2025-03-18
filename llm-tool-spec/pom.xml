@@ -9,9 +9,9 @@
     <version>0.1.2</version>
   </parent>
 
-  <artifactId>agent-tool-spec</artifactId>
-  <name>Agent Tool Spec</name>
-  <description>Spec of agent tool</description>
+  <artifactId>llm-tool-spec</artifactId>
+  <name>LLM Tool Spec</name>
+  <description>Spec of llm tool</description>
 
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>

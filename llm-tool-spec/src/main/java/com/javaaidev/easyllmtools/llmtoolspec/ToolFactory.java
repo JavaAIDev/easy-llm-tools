@@ -1,4 +1,4 @@
-package com.javaaidev.easyllmtools.agenttoolspec;
+package com.javaaidev.easyllmtools.llmtoolspec;
 
 /**
  * Factory to create tools

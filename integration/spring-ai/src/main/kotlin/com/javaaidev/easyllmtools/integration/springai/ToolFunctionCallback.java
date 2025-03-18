@@ -1,7 +1,7 @@
 package com.javaaidev.easyllmtools.integration.springai;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.javaaidev.easyllmtools.agenttoolspec.Tool;
+import com.javaaidev.easyllmtools.llmtoolspec.Tool;
 import org.springframework.ai.model.function.FunctionCallback;
 
 public class ToolFunctionCallback implements FunctionCallback {

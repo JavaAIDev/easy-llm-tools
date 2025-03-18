@@ -13,7 +13,7 @@ class OpenAPIAgentToolGenerator : JavaClientCodegen(), CodegenConfig {
             SupportingFile(
                 "serviceFactories.mustache",
                 "src/main/resources/META-INF/services",
-                "com.javaaidev.easyllmtools.agenttoolspec.ToolFactory"
+                "com.javaaidev.easyllmtools.llmtoolspec.ToolFactory"
             )
         )
     }

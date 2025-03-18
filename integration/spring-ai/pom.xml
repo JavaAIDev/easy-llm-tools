@@ -36,7 +36,7 @@
   <dependencies>
     <dependency>
       <groupId>com.javaaidev.easyllmtools</groupId>
-      <artifactId>agent-tool-spec</artifactId>
+      <artifactId>llm-tool-spec</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

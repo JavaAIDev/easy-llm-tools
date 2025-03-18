@@ -1,6 +1,6 @@
 {
   "$schema" : "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/JavaAIDev/easy-llm-tools/raw/refs/heads/main/agent-tool-spec.json",
+  "$id": "https://github.com/JavaAIDev/easy-llm-tools/raw/refs/heads/main/llm-tool-spec.json",
   "type": "object",
   "title": "LLM Tool Spec",
   "description": "Tools for LLMs to use",

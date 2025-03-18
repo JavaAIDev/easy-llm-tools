@@ -11,7 +11,7 @@
   <version>0.1.2</version>
   <packaging>pom</packaging>
   <modules>
-    <module>agent-tool-spec</module>
+    <module>llm-tool-spec</module>
     <module>integration</module>
     <module>code-generator</module>
     <module>support</module>

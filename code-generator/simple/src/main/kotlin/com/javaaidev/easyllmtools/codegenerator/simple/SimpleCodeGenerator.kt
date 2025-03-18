@@ -101,7 +101,7 @@ object SimpleCodeGenerator {
             artifactId,
             artifactVersion,
             packageName,
-            "com.javaaidev.easyllmtools.agenttoolspec",
+            "com.javaaidev.easyllmtools.llmtoolspec",
             modelPackageName,
             toolName,
             configurationClassName,
@@ -128,7 +128,7 @@ object SimpleCodeGenerator {
             GeneratedFile(
                 "services",
                 servicesDir
-            ) { "com.javaaidev.easyllmtools.agenttoolspec.ToolFactory" },
+            ) { "com.javaaidev.easyllmtools.llmtoolspec.ToolFactory" },
         )
 
         files.forEach { file ->
