@@ -10,6 +10,13 @@ class SimpleCodeGeneratorCommand : Callable<Int> {
     @CommandLine.Mixin
     lateinit var options: ReusableOptions
 
+    @CommandLine.Option(
+        names = ["--overwrite-tool-implementation"],
+        defaultValue = "false",
+        description = ["Should tool implementation be overwritten"]
+    )
+    var overwriteToolImplementation: Boolean = false
+
     override fun call(): Int {
         SimpleCodeGenerator.generate(
             options.inputSpec,
@@ -17,7 +24,8 @@ class SimpleCodeGeneratorCommand : Callable<Int> {
             options.artifactId,
             options.artifactVersion,
             options.packageName,
-            options.outputDir.toPath()
+            options.outputDir.toPath(),
+            overwriteToolImplementation,
         )
         return 0
     }

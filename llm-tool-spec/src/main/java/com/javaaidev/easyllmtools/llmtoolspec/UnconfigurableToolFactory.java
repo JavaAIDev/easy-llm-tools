@@ -3,14 +3,15 @@ package com.javaaidev.easyllmtools.llmtoolspec;
 /**
  * Factory to create a tool without configuration
  *
- * @param <Tool> tool
+ * @param <T> tool
  */
-public interface UnconfigurableToolFactory<Tool> {
+public interface UnconfigurableToolFactory<Request, Response, T extends Tool<? super Request, ? extends Response>> extends
+    ToolFactory {
 
   /**
    * Create a tool
    *
    * @return the tool
    */
-  Tool create();
+  T create();
 }

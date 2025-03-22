@@ -12,10 +12,12 @@ import org.apache.commons.text.CaseUtils
 import org.apache.commons.text.StringEscapeUtils
 import org.jsonschema2pojo.*
 import org.jsonschema2pojo.rules.RuleFactory
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.function.Supplier
+import kotlin.io.path.exists
 
 data class Definition(
     val id: String,
@@ -34,21 +36,25 @@ data class TemplateContext(
     val specPackageName: String,
     val generatedSpecPackageName: String,
     val toolClassName: String,
+    val hasConfiguration: Boolean,
     val configurationClassName: String,
     val parametersClassName: String,
     val returnTypeClassName: String,
+    val toolFactoryClassName: String,
     val definition: Definition,
 )
 
 data class GeneratedFile(
     val templateName: String,
     val dir: Path,
+    val overwrite: Boolean = true,
     val fileNameSupplier: Supplier<String>,
 )
 
 object SimpleCodeGenerator {
     private val objectMapper = ObjectMapper()
     private val handlebars: Handlebars
+    private val logger = LoggerFactory.getLogger(SimpleCodeGenerator::class.java)
 
     init {
         val loader = ClassPathTemplateLoader()
@@ -65,13 +71,14 @@ object SimpleCodeGenerator {
         artifactId: String,
         artifactVersion: String,
         packageName: String,
-        outputDir: Path
+        outputDir: Path,
+        overwriteToolImplementation: Boolean,
     ) {
+        logger.info("Generate code from {}", inputSpec.toPath().toAbsolutePath().normalize())
         val jsonNode = objectMapper.readTree(inputSpec)
         val definitionNode =
             jsonNode.get("definition") ?: throw InvalidToolSpecException("Definition is a required")
         val name = definitionNode.get("name")?.textValue() ?: ""
-        val id = definitionNode.get("id")?.textValue() ?: name
         val description = definitionNode.get("description")?.textValue() ?: ""
         val output = Files.createTempDirectory("tool_")
         val sourceRootDir = outputDir.resolve(Path.of("src", "main", "java"))
@@ -84,18 +91,41 @@ object SimpleCodeGenerator {
         val configurationJson = jsonNodeString(jsonNode.get("configuration"))
         val modelPackageName = "$packageName.model"
         val toolName = CaseUtils.toCamelCase(name, true)
-        val configurationClassName = "${toolName}Configuration"
-        val parametersClassName = "${toolName}Parameters"
-        val returnTypeClassName = "${toolName}ReturnType"
-        jsonNodeToCode(output, sourceRootDir, parametersJson, parametersClassName, modelPackageName)
-        jsonNodeToCode(output, sourceRootDir, returnTypeJson, returnTypeClassName, modelPackageName)
-        jsonNodeToCode(
-            output,
-            sourceRootDir,
-            configurationJson,
-            configurationClassName,
-            modelPackageName
-        )
+        val toolId = definitionNode.get("id")?.textValue() ?: toolName
+        val hasConfiguration = notEmptyJson(configurationJson)
+        val configurationClassName =
+            if (hasConfiguration) "${toolName}Configuration" else "Void"
+        val parametersClassName =
+            if (notEmptyJson(parametersJson)) "${toolName}Parameters" else "Void"
+        val returnTypeClassName =
+            if (notEmptyJson(returnTypeJson)) "${toolName}ReturnType" else "Void"
+        if (notEmptyJson(parametersJson)) {
+            jsonNodeToCode(
+                output,
+                sourceRootDir,
+                parametersJson,
+                parametersClassName,
+                modelPackageName
+            )
+        }
+        if (notEmptyJson(returnTypeJson)) {
+            jsonNodeToCode(
+                output,
+                sourceRootDir,
+                returnTypeJson,
+                returnTypeClassName,
+                modelPackageName
+            )
+        }
+        if (hasConfiguration) {
+            jsonNodeToCode(
+                output,
+                sourceRootDir,
+                configurationJson,
+                configurationClassName,
+                modelPackageName
+            )
+        }
         val context = TemplateContext(
             groupId,
             artifactId,
@@ -104,11 +134,13 @@ object SimpleCodeGenerator {
             "com.javaaidev.easyllmtools.llmtoolspec",
             modelPackageName,
             toolName,
+            hasConfiguration,
             configurationClassName,
             parametersClassName,
             returnTypeClassName,
+            if (hasConfiguration) "ConfigurableToolFactory" else "UnconfigurableToolFactory",
             Definition(
-                toolName,
+                toolId,
                 toolName,
                 description,
                 parametersJson,
@@ -123,7 +155,7 @@ object SimpleCodeGenerator {
         val files = listOf(
             GeneratedFile("abstractTool", sourceDir) { "Abstract${toolName}.java" },
             GeneratedFile("toolFactory", sourceDir) { "${toolName}Factory.java" },
-            GeneratedFile("tool", sourceDir) { "${toolName}.java" },
+            GeneratedFile("tool", sourceDir, overwriteToolImplementation) { "${toolName}.java" },
             GeneratedFile("pom", outputDir) { "pom.xml" },
             GeneratedFile(
                 "services",
@@ -132,9 +164,15 @@ object SimpleCodeGenerator {
         )
 
         files.forEach { file ->
+            val outputFile = file.dir.resolve(file.fileNameSupplier.get())
+            if (outputFile.exists() && !file.overwrite) {
+                logger.info("Skip generation of tool implementation")
+                return
+            }
             val template = handlebars.compile(file.templateName)
             template.apply(context).run {
-                Files.writeString(file.dir.resolve(file.fileNameSupplier.get()), this)
+                logger.info("Created file {}", outputFile.toAbsolutePath().normalize())
+                Files.writeString(outputFile, this)
             }
         }
 
@@ -212,4 +250,6 @@ object SimpleCodeGenerator {
         Files.createDirectories(output)
         codeModel.build(output.toFile())
     }
+
+    private fun notEmptyJson(json: String) = json.isNotEmpty() || json != "{}"
 }

@@ -1,12 +1,19 @@
 package {{packageName}};
 
-import {{specPackageName}}.ToolFactory;
+import {{specPackageName}}.{{toolFactoryClassName}};
 import {{generatedSpecPackageName}}.{{configurationClassName}};
+import {{generatedSpecPackageName}}.{{parametersClassName}};
+import {{generatedSpecPackageName}}.{{returnTypeClassName}};
 
-public class {{toolClassName}}Factory implements ToolFactory<{{toolClassName}}, {{configurationClassName}}> {
+public class {{toolClassName}}Factory implements {{toolFactoryClassName}}<{{parametersClassName}}, {{returnTypeClassName}}, {{toolClassName}}{{#if hasConfiguration}}, {{configurationClassName}}{{/if}}> {
 
     @Override
     public {{toolClassName}} create(final {{configurationClassName}} config) {
         return new {{toolClassName}}(config);
+    }
+
+    @Override
+    public String toolId() {
+        return "{{#escapeJava definition.id}}{{/escapeJava}}";
     }
 }

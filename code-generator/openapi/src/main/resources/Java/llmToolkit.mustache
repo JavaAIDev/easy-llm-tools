@@ -41,7 +41,7 @@ import {{invokerPackage}}.ApiClient;
 
 import com.javaaidev.easyllmtools.llmtoolspec.Tool;
 import com.javaaidev.easyllmtools.llmtoolspec.Toolkit;
-import com.javaaidev.easyllmtools.llmtoolspec.ToolFactory;
+import com.javaaidev.easyllmtools.llmtoolspec.ConfigurableToolFactory;
 
 {{>generatedAnnotation}}
 {{#operations}}
@@ -173,10 +173,15 @@ public class {{classname}}LLMToolkit implements Toolkit {
     }
   }
 
-  public static class LLMToolFactory_{{operationId}} implements ToolFactory<LLMTool_{{operationId}}, {{classname}}ToolConfiguration> {
+  public static class LLMToolFactory_{{operationId}} implements ConfigurableToolFactory<Request_{{operationId}}, Response_{{operationId}}, LLMTool_{{operationId}}, {{classname}}ToolConfiguration> {
     @Override
     public LLMTool_{{operationId}} create({{classname}}ToolConfiguration config) {
       return new LLMTool_{{operationId}}(config);
+    }
+
+    @Override
+    public String toolId() {
+      return "{{operationId}}";
     }
   }
 

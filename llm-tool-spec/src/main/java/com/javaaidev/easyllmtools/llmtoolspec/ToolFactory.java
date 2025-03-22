@@ -1,18 +1,6 @@
 package com.javaaidev.easyllmtools.llmtoolspec;
 
-/**
- * Factory to create tools
- *
- * @param <Tool>   Tool type
- * @param <Config> Configuration type
- */
-public interface ToolFactory<Tool, Config> {
+public interface ToolFactory {
 
-  /**
-   * Create a tool
-   *
-   * @param config Configuration
-   * @return the tool
-   */
-  Tool create(Config config);
+  String toolId();
 }
