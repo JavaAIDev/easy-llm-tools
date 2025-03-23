@@ -32,6 +32,10 @@ data class TemplateContext(
     val groupId: String,
     val artifactId: String,
     val artifactVersion: String,
+    val hasParentProject: Boolean,
+    val parentGroupId: String,
+    val parentArtifactId: String,
+    val parentArtifactVersion: String,
     val packageName: String,
     val specPackageName: String,
     val generatedSpecPackageName: String,
@@ -73,6 +77,11 @@ object SimpleCodeGenerator {
         packageName: String,
         outputDir: Path,
         overwriteToolImplementation: Boolean,
+        overwritePomFile: Boolean,
+        toolIdPrefix: String,
+        parentGroupId: String,
+        parentArtifactId: String,
+        parentArtifactVersion: String,
     ) {
         logger.info("Generate code from {}", inputSpec.toPath().toAbsolutePath().normalize())
         val jsonNode = objectMapper.readTree(inputSpec)
@@ -91,7 +100,7 @@ object SimpleCodeGenerator {
         val configurationJson = jsonNodeString(jsonNode.get("configuration"))
         val modelPackageName = "$packageName.model"
         val toolName = CaseUtils.toCamelCase(name, true)
-        val toolId = definitionNode.get("id")?.textValue() ?: toolName
+        val toolId = toolIdPrefix + (definitionNode.get("id")?.textValue() ?: toolName)
         val hasConfiguration = notEmptyJson(configurationJson)
         val configurationClassName =
             if (hasConfiguration) "${toolName}Configuration" else "Void"
@@ -126,10 +135,16 @@ object SimpleCodeGenerator {
                 modelPackageName
             )
         }
+        val hasParentProject =
+            parentGroupId.isNotEmpty() && parentArtifactId.isNotEmpty() && parentArtifactVersion.isNotEmpty()
         val context = TemplateContext(
             groupId,
             artifactId,
             artifactVersion,
+            hasParentProject,
+            parentGroupId,
+            parentArtifactId,
+            parentArtifactVersion,
             packageName,
             "com.javaaidev.easyllmtools.llmtoolspec",
             modelPackageName,
@@ -156,7 +171,7 @@ object SimpleCodeGenerator {
             GeneratedFile("abstractTool", sourceDir) { "Abstract${toolName}.java" },
             GeneratedFile("toolFactory", sourceDir) { "${toolName}Factory.java" },
             GeneratedFile("tool", sourceDir, overwriteToolImplementation) { "${toolName}.java" },
-            GeneratedFile("pom", outputDir) { "pom.xml" },
+            GeneratedFile("pom", outputDir, overwritePomFile) { "pom.xml" },
             GeneratedFile(
                 "services",
                 servicesDir
@@ -166,8 +181,8 @@ object SimpleCodeGenerator {
         files.forEach { file ->
             val outputFile = file.dir.resolve(file.fileNameSupplier.get())
             if (outputFile.exists() && !file.overwrite) {
-                logger.info("Skip generation of tool implementation")
-                return
+                logger.info("Skip generation of file {}", outputFile)
+                return@forEach
             }
             val template = handlebars.compile(file.templateName)
             template.apply(context).run {

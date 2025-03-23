@@ -17,6 +17,20 @@ class SimpleCodeGeneratorCommand : Callable<Int> {
     )
     var overwriteToolImplementation: Boolean = false
 
+    @CommandLine.Option(
+        names = ["--overwrite-pom-file"],
+        defaultValue = "false",
+        description = ["Should pom file be overwritten"]
+    )
+    var overwritePomFile: Boolean = false
+
+    @CommandLine.Option(
+        names = ["--tool-id-prefix"],
+        defaultValue = "",
+        description = ["Prefix of generated tool id"]
+    )
+    var toolIdPrefix = ""
+
     override fun call(): Int {
         SimpleCodeGenerator.generate(
             options.inputSpec,
@@ -26,6 +40,11 @@ class SimpleCodeGeneratorCommand : Callable<Int> {
             options.packageName,
             options.outputDir.toPath(),
             overwriteToolImplementation,
+            overwritePomFile,
+            toolIdPrefix,
+            options.parentGroupId,
+            options.parentArtifactId,
+            options.parentArtifactVersion,
         )
         return 0
     }
