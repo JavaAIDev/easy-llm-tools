@@ -37,7 +37,7 @@ public class ToolFunctionCallback implements FunctionCallback {
       var result = tool.call(input);
       return objectMapper.writeValueAsString(result);
     } catch (Exception e) {
-      throw new RuntimeException("Failed to call tool", e);
+      throw new ToolCallException(tool.getId(), e.getMessage(), e);
     }
   }
 }
