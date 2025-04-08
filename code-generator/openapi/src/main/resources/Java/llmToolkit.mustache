@@ -129,7 +129,7 @@ public class {{classname}}LLMToolkit implements Toolkit {
 
     @Override
     public String getDescription() {
-      return "{{summary}}";
+      return "{{#summary}}{{.}}{{/summary}}{{^summary}}{{notes}}{{/summary}}";
     }
 
     @Override
