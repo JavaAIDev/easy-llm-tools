@@ -1,17 +1,17 @@
 package com.javaaidev.easyllmtools.integration.springai;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.javaaidev.easyllmtools.integration.core.ToolInvoker;
 import com.javaaidev.easyllmtools.llmtoolspec.Tool;
 import org.springframework.ai.model.function.FunctionCallback;
 
 public class ToolFunctionCallback implements FunctionCallback {
 
   private final Tool tool;
-  private final ObjectMapper objectMapper;
+  private final ToolInvoker toolInvoker;
 
-  public ToolFunctionCallback(Tool tool, ObjectMapper objectMapper) {
+  public ToolFunctionCallback(Tool tool, ToolInvoker toolInvoker) {
     this.tool = tool;
-    this.objectMapper = objectMapper;
+    this.toolInvoker = toolInvoker;
   }
 
   @Override
@@ -31,13 +31,6 @@ public class ToolFunctionCallback implements FunctionCallback {
 
   @Override
   public String call(String functionInput) {
-    try {
-      var type = objectMapper.getTypeFactory().constructType(tool.getRequestType());
-      var input = objectMapper.readValue(functionInput, type);
-      var result = tool.call(input);
-      return objectMapper.writeValueAsString(result);
-    } catch (Exception e) {
-      throw new ToolCallException(tool.getId(), e.getMessage(), e);
-    }
+    return toolInvoker.invoke(tool, functionInput);
   }
 }
