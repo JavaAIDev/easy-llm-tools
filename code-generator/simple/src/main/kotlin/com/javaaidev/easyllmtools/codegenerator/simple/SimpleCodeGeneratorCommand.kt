@@ -31,6 +31,41 @@ class SimpleCodeGeneratorCommand : Callable<Int> {
     )
     var toolIdPrefix = ""
 
+    @CommandLine.Option(
+        names = ["--model-files-only"],
+        defaultValue = "false",
+        description = ["Only generate model files"]
+    )
+    var modelFilesOnly: Boolean = false
+
+    @CommandLine.Option(
+        names = ["--no-model-files"],
+        defaultValue = "false",
+        description = ["Skip generation of model files"]
+    )
+    var noModelFiles: Boolean = false
+
+    @CommandLine.Option(
+        names = ["--tool-name"],
+        defaultValue = "",
+        description = ["Override tool name in the spec file"]
+    )
+    var toolName: String = ""
+
+    @CommandLine.Option(
+        names = ["--tool-description"],
+        defaultValue = "",
+        description = ["Override tool description in the spec file"]
+    )
+    var toolDescription: String = ""
+
+    @CommandLine.Option(
+        names = ["--model-package-name"],
+        defaultValue = "",
+        description = ["Override default model package name"]
+    )
+    var modelPackageName: String = ""
+
     override fun call(): Int {
         SimpleCodeGenerator.generate(
             options.inputSpec,
@@ -42,9 +77,14 @@ class SimpleCodeGeneratorCommand : Callable<Int> {
             overwriteToolImplementation,
             overwritePomFile,
             toolIdPrefix,
+            modelFilesOnly,
+            noModelFiles,
             options.parentGroupId,
             options.parentArtifactId,
             options.parentArtifactVersion,
+            toolName,
+            toolDescription,
+            modelPackageName,
         )
         return 0
     }

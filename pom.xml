@@ -8,7 +8,7 @@
   <artifactId>easyllmtools-parent</artifactId>
   <name>Easy LLM Tools</name>
   <description>Build tools for LLM</description>
-  <version>0.1.7</version>
+  <version>0.1.8</version>
   <packaging>pom</packaging>
   <modules>
     <module>llm-tool-spec</module>
@@ -45,8 +45,9 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <kotlin.version>2.1.10</kotlin.version>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
+    <java.version>17</java.version>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
   </properties>
 
   <dependencyManagement>
@@ -189,6 +190,14 @@
               </goals>
             </execution>
           </executions>
+          <configuration>
+            <jdkVersion>${java.version}</jdkVersion>
+            <pluginsConfiguration>
+              <org.jetbrains.dokka.base.DokkaBase>
+                <footerMessage>(c) Fu Cheng @ JavaAIDev.com 2025</footerMessage>
+              </org.jetbrains.dokka.base.DokkaBase>
+            </pluginsConfiguration>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>

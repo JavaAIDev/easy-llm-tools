@@ -52,6 +52,7 @@ data class GeneratedFile(
     val templateName: String,
     val dir: Path,
     val overwrite: Boolean = true,
+    val skip: Boolean = false,
     val fileNameSupplier: Supplier<String>,
 )
 
@@ -79,16 +80,23 @@ object SimpleCodeGenerator {
         overwriteToolImplementation: Boolean,
         overwritePomFile: Boolean,
         toolIdPrefix: String,
+        modelFilesOnly: Boolean,
+        noModelFiles: Boolean,
         parentGroupId: String,
         parentArtifactId: String,
         parentArtifactVersion: String,
+        customToolName: String,
+        toolDescription: String,
+        customModelPackageName: String,
     ) {
         logger.info("Generate code from {}", inputSpec.toPath().toAbsolutePath().normalize())
         val jsonNode = objectMapper.readTree(inputSpec)
         val definitionNode =
             jsonNode.get("definition") ?: throw InvalidToolSpecException("Definition is a required")
-        val name = definitionNode.get("name")?.textValue() ?: ""
-        val description = definitionNode.get("description")?.textValue() ?: ""
+        val name =
+            customToolName.ifBlank { definitionNode.get("name")?.textValue() ?: "" }
+        val description =
+            toolDescription.ifBlank { definitionNode.get("description")?.textValue() ?: "" }
         val output = Files.createTempDirectory("tool_")
         val sourceRootDir = outputDir.resolve(Path.of("src", "main", "java"))
         val resourcesRootDir = outputDir.resolve(Path.of("src", "main", "resources"))
@@ -98,7 +106,7 @@ object SimpleCodeGenerator {
         val returnTypeJson = jsonNodeString(definitionNode.get("returnType"))
         val examplesJson = jsonNodeString(definitionNode.get("examples"))
         val configurationJson = jsonNodeString(jsonNode.get("configuration"))
-        val modelPackageName = "$packageName.model"
+        val modelPackageName = customModelPackageName.ifBlank { "$packageName.model" }
         val toolName = CaseUtils.toCamelCase(name, true)
         val toolId = toolIdPrefix + (definitionNode.get("id")?.textValue() ?: toolName)
         val hasConfiguration = notEmptyJson(configurationJson)
@@ -108,7 +116,7 @@ object SimpleCodeGenerator {
             if (notEmptyJson(parametersJson)) "${toolName}Parameters" else "Void"
         val returnTypeClassName =
             if (notEmptyJson(returnTypeJson)) "${toolName}ReturnType" else "Void"
-        if (notEmptyJson(parametersJson)) {
+        if (!noModelFiles && notEmptyJson(parametersJson)) {
             jsonNodeToCode(
                 output,
                 sourceRootDir,
@@ -117,7 +125,7 @@ object SimpleCodeGenerator {
                 modelPackageName
             )
         }
-        if (notEmptyJson(returnTypeJson)) {
+        if (!noModelFiles && notEmptyJson(returnTypeJson)) {
             jsonNodeToCode(
                 output,
                 sourceRootDir,
@@ -126,7 +134,7 @@ object SimpleCodeGenerator {
                 modelPackageName
             )
         }
-        if (hasConfiguration) {
+        if (!noModelFiles && hasConfiguration) {
             jsonNodeToCode(
                 output,
                 sourceRootDir,
@@ -161,26 +169,40 @@ object SimpleCodeGenerator {
                 parametersJson,
                 returnTypeJson,
                 examplesJson,
-            )
+            ),
         )
 
         val sourceDir = sourceRootDir.resolve(Path.of(".", *packageName.split(".").toTypedArray()))
         val servicesDir = resourcesRootDir.resolve("META-INF").resolve("services")
-        Files.createDirectories(servicesDir)
         val files = listOf(
-            GeneratedFile("abstractTool", sourceDir) { "Abstract${toolName}.java" },
-            GeneratedFile("toolFactory", sourceDir) { "${toolName}Factory.java" },
-            GeneratedFile("tool", sourceDir, overwriteToolImplementation) { "${toolName}.java" },
+            GeneratedFile(
+                "abstractTool",
+                sourceDir,
+                skip = modelFilesOnly
+            ) { "Abstract${toolName}.java" },
+            GeneratedFile(
+                "toolFactory",
+                sourceDir,
+                skip = modelFilesOnly
+            ) { "${toolName}Factory.java" },
+            GeneratedFile(
+                "tool",
+                sourceDir,
+                overwriteToolImplementation,
+                modelFilesOnly
+            ) { "${toolName}.java" },
             GeneratedFile("pom", outputDir, overwritePomFile) { "pom.xml" },
             GeneratedFile(
                 "services",
-                servicesDir
+                servicesDir,
+                skip = modelFilesOnly,
             ) { "com.javaaidev.easyllmtools.llmtoolspec.ToolFactory" },
         )
 
         files.forEach { file ->
+            Files.createDirectories(file.dir)
             val outputFile = file.dir.resolve(file.fileNameSupplier.get())
-            if (outputFile.exists() && !file.overwrite) {
+            if (file.skip || (outputFile.exists() && !file.overwrite)) {
                 logger.info("Skip generation of file {}", outputFile)
                 return@forEach
             }

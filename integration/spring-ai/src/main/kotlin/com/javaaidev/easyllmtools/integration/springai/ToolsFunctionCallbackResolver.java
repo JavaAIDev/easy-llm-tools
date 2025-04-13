@@ -40,9 +40,9 @@ public class ToolsFunctionCallbackResolver implements ApplicationContextAware,
   @Override
   public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
     var tools = applicationContext.getBeansOfType(Tool.class);
-    LOGGER.info("Found tools: {}", tools.values().stream().map(Tool::getId).toList());
+    LOGGER.info("Found tools: {}", tools.values().stream().map(Tool::getName).toList());
     for (Tool tool : tools.values()) {
-      toolsMap.put(tool.getId(), tool);
+      toolsMap.put(tool.getName(), tool);
     }
   }
 }
