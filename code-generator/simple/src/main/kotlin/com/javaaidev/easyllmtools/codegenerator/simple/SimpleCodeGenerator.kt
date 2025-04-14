@@ -86,6 +86,7 @@ object SimpleCodeGenerator {
         parentArtifactId: String,
         parentArtifactVersion: String,
         customToolName: String,
+        llmToolName: String,
         toolDescription: String,
         customModelPackageName: String,
     ) {
@@ -164,7 +165,7 @@ object SimpleCodeGenerator {
             if (hasConfiguration) "ConfigurableToolFactory" else "UnconfigurableToolFactory",
             Definition(
                 toolId,
-                toolName,
+                llmToolName.ifBlank { toolName },
                 description,
                 parametersJson,
                 returnTypeJson,

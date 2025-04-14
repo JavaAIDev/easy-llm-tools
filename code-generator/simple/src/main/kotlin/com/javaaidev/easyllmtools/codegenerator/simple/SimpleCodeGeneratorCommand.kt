@@ -48,9 +48,16 @@ class SimpleCodeGeneratorCommand : Callable<Int> {
     @CommandLine.Option(
         names = ["--tool-name"],
         defaultValue = "",
-        description = ["Override tool name in the spec file"]
+        description = ["Tool name used in generated class names"]
     )
     var toolName: String = ""
+
+    @CommandLine.Option(
+        names = ["--llm-tool-name"],
+        defaultValue = "",
+        description = ["Tool name sent to LLMs"]
+    )
+    var llmToolName: String = ""
 
     @CommandLine.Option(
         names = ["--tool-description"],
@@ -83,6 +90,7 @@ class SimpleCodeGeneratorCommand : Callable<Int> {
             options.parentArtifactId,
             options.parentArtifactVersion,
             toolName,
+            llmToolName,
             toolDescription,
             modelPackageName,
         )
