@@ -13,16 +13,31 @@ import java.util.List;
 import java.util.Map;
 import reactor.core.publisher.Mono;
 
+/**
+ * Helper class for integration with MCP
+ */
 public class McpToolHelper {
 
   private final ToolInvoker toolInvoker = new ToolInvoker();
 
+  /**
+   * Convert a tool to MCP sync tool
+   *
+   * @param tool Tool
+   * @return MCP sync tool
+   */
   public McpServerFeatures.SyncToolSpecification toSyncTool(Tool tool) {
     return new SyncToolSpecification(
         fromTool(tool), (exchange, args) -> callTool(tool, args)
     );
   }
 
+  /**
+   * Convert a tool to MCP async tool
+   *
+   * @param tool Tool
+   * @return MCP async tool
+   */
   public McpServerFeatures.AsyncToolSpecification toAsyncTool(Tool tool) {
     return new AsyncToolSpecification(
         fromTool(tool),
