@@ -7,21 +7,21 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.model.function.FunctionCallback;
-import org.springframework.ai.model.function.FunctionCallbackResolver;
+import org.springframework.ai.tool.resolution.ToolCallbackResolver;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 public class ToolsFunctionCallbackResolver implements ApplicationContextAware,
-    FunctionCallbackResolver {
+    ToolCallbackResolver {
 
-  private final FunctionCallbackResolver fallbackResolver;
+  private final ToolCallbackResolver fallbackResolver;
   private final Map<String, Tool> toolsMap = new HashMap<>();
   private final ToolInvoker toolInvoker = new ToolInvoker();
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ToolsFunctionCallbackResolver.class);
 
-  public ToolsFunctionCallbackResolver(FunctionCallbackResolver fallbackResolver) {
+  public ToolsFunctionCallbackResolver(ToolCallbackResolver fallbackResolver) {
     this.fallbackResolver = fallbackResolver;
   }
 

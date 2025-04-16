@@ -8,7 +8,7 @@ import kotlin.system.exitProcess
 @CommandLine.Command(
     name = "easy-llm-tools",
     mixinStandardHelpOptions = true,
-    version = ["0.1.9"],
+    version = ["0.2.0"],
     description = ["Generate code for LLM tools"],
     scope = CommandLine.ScopeType.INHERIT,
     subcommands = [

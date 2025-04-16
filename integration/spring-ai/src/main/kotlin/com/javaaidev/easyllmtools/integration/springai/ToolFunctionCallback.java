@@ -2,9 +2,10 @@ package com.javaaidev.easyllmtools.integration.springai;
 
 import com.javaaidev.easyllmtools.integration.core.ToolInvoker;
 import com.javaaidev.easyllmtools.llmtoolspec.Tool;
-import org.springframework.ai.model.function.FunctionCallback;
+import org.springframework.ai.tool.ToolCallback;
+import org.springframework.ai.tool.definition.ToolDefinition;
 
-public class ToolFunctionCallback implements FunctionCallback {
+public class ToolFunctionCallback implements ToolCallback {
 
   private final Tool tool;
   private final ToolInvoker toolInvoker;
@@ -15,18 +16,12 @@ public class ToolFunctionCallback implements FunctionCallback {
   }
 
   @Override
-  public String getName() {
-    return this.tool.getName();
-  }
-
-  @Override
-  public String getDescription() {
-    return this.tool.getDescription();
-  }
-
-  @Override
-  public String getInputTypeSchema() {
-    return this.tool.getParametersSchema();
+  public ToolDefinition getToolDefinition() {
+    return ToolDefinition.builder()
+        .name(this.tool.getName())
+        .description(this.tool.getDescription())
+        .inputSchema(this.tool.getParametersSchema())
+        .build();
   }
 
   @Override

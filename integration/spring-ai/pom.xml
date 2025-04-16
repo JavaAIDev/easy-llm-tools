@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.javaaidev.easyllmtools</groupId>
     <artifactId>integration</artifactId>
-    <version>0.1.9</version>
+    <version>0.2.0</version>
   </parent>
 
   <artifactId>integration-spring-ai</artifactId>
@@ -14,11 +14,12 @@
   <description>Spring AI Integration</description>
 
   <properties>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
+    <java.version>17</java.version>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spring-ai.version>1.0.0-M5</spring-ai.version>
-    <jackson.version>2.17.3</jackson.version>
+    <spring-ai.version>1.0.0-M6</spring-ai.version>
+    <jackson.version>2.18.3</jackson.version>
   </properties>
 
   <dependencyManagement>
