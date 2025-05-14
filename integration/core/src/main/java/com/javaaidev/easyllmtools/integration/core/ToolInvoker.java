@@ -11,6 +11,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.javaaidev.easyllmtools.llmtoolspec.Tool;
 import java.util.Map;
+import java.util.Objects;
 
 public class ToolInvoker {
 
@@ -31,7 +32,7 @@ public class ToolInvoker {
   }
 
   public ToolInvoker(ObjectMapper objectMapper) {
-    this.objectMapper = objectMapper != null ? objectMapper : defaultObjectMapper;
+    this.objectMapper = Objects.requireNonNullElse(objectMapper, defaultObjectMapper);
   }
 
   public String invoke(Tool tool, Map<String, Object> input) {

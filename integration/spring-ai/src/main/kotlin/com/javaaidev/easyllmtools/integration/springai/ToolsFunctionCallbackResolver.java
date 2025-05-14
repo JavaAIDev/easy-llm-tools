@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.ai.model.function.FunctionCallback;
+import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.resolution.ToolCallbackResolver;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -26,7 +26,7 @@ public class ToolsFunctionCallbackResolver implements ApplicationContextAware,
   }
 
   @Override
-  public FunctionCallback resolve(String name) {
+  public ToolCallback resolve(String name) {
     var tool = toolsMap.get(name);
     if (tool != null) {
       return new ToolFunctionCallback(tool, toolInvoker);

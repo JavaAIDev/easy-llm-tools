@@ -8,8 +8,6 @@ import io.modelcontextprotocol.server.McpServerFeatures.AsyncToolSpecification;
 import io.modelcontextprotocol.server.McpServerFeatures.SyncToolSpecification;
 import io.modelcontextprotocol.spec.McpSchema;
 import io.modelcontextprotocol.spec.McpSchema.CallToolResult;
-import io.modelcontextprotocol.spec.McpSchema.TextContent;
-import java.util.List;
 import java.util.Map;
 import reactor.core.publisher.Mono;
 
@@ -62,6 +60,6 @@ public class McpToolHelper {
       content = e.getMessage();
       isError = true;
     }
-    return new CallToolResult(List.of(new TextContent(content)), isError);
+    return CallToolResult.builder().addTextContent(content).isError(isError).build();
   }
 }
